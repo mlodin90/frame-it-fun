@@ -36,8 +36,8 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
 
   const wrap =
     variant === "card"
-      ? "bg-card/80 border border-border rounded-2xl p-8 shadow-soft"
-      : "bg-background/60 backdrop-blur-xl border border-primary/30 rounded-2xl p-8 shadow-gold";
+      ? "bg-card border border-border rounded-2xl p-8 shadow-soft"
+      : "bg-black/80 backdrop-blur-xl border border-primary/40 rounded-2xl p-8 shadow-gold";
 
   return (
     <form onSubmit={onSubmit} className={wrap}>
