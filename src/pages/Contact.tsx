@@ -28,7 +28,7 @@ export default function ContactPage() {
           <div className="lg:col-span-2 space-y-6">
             <InfoRow icon={<Mail size={20} />} label="Email" value="info@frameitla.com" href="mailto:info@frameitla.com" />
             <InfoRow icon={<Instagram size={20} />} label="Instagram" value="@frameitla" href="https://www.instagram.com/frameitla" />
-            <InfoRow icon={<MapPin size={20} />} label="Service Area" value="Los Angeles & Greater LA County" />
+            <InfoRow icon={<MapPin size={20} />} label="Service Area" value="Ventura, Los Angeles, and Orange County" />
             <InfoRow icon={<Clock size={20} />} label="Response Time" value="Within 24 hours" />
 
             <div className="mt-10 p-6 rounded-2xl border border-primary/30 bg-card/40">
