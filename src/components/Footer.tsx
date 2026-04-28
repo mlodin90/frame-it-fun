@@ -9,7 +9,7 @@ export function Footer() {
           <h3 className="font-display text-2xl text-gradient-gold mb-3">Frame It LA</h3>
           <p className="text-muted-foreground text-sm leading-relaxed">
             Professional photo booth services for weddings, corporate events, and
-            celebrations across Los Angeles.
+            celebrations across Ventura, Los Angeles, and Orange County.
           </p>
         </div>
         <div>
