@@ -148,6 +148,8 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
             placeholder="Tell us about your event type"
             value={otherEventType}
             onChange={(e) => setOtherEventType(e.target.value)}
+            maxLength={80}
+            required
           />
         )}
         <textarea
