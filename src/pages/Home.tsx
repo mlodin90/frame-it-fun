@@ -39,18 +39,18 @@ export default function HomePage() {
         />
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="relative max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-12 items-center w-full">
-          <div>
+          <div className="text-center lg:text-left">
             <div className="text-xs uppercase tracking-[0.3em] text-primary mb-4">
               Ventura · Los Angeles · Orange County — Premium Photo Booths
             </div>
             <h1 className="font-display text-5xl md:text-7xl leading-[1.05]">
               Capture Your <span className="text-gradient-gold italic">Moments</span>
             </h1>
-            <p className="mt-6 text-lg text-muted-foreground max-w-lg leading-relaxed">
+            <p className="mt-6 text-lg text-muted-foreground max-w-lg leading-relaxed mx-auto lg:mx-0">
               Professional photo booth experiences crafted for unforgettable events —
               from intimate weddings to large-scale brand activations.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-8 flex flex-wrap gap-4 justify-center lg:justify-start">
               <Link
                 to="/contact"
                 className="bg-gradient-gold text-primary-foreground px-7 py-3.5 rounded-full font-semibold shadow-gold hover:opacity-90 transition"
@@ -64,7 +64,7 @@ export default function HomePage() {
                 View Gallery
               </Link>
             </div>
-            <div className="mt-10 flex items-center gap-6 text-sm text-muted-foreground">
+            <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground justify-center lg:justify-start">
               <div className="flex items-center gap-1 text-primary">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star key={i} size={16} fill="currentColor" />
@@ -73,7 +73,7 @@ export default function HomePage() {
               <span>500+ events captured · 5-star rated</span>
             </div>
           </div>
-          <div className="lg:justify-self-end w-full max-w-md">
+          <div className="w-full max-w-md mx-auto lg:mx-0 lg:justify-self-end">
             <QuoteForm />
           </div>
         </div>
