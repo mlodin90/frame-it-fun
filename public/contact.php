@@ -39,6 +39,84 @@ function respond(int $status, array $payload): void {
     exit;
 }
 
+function client_ip(): string { return $_SERVER['REMOTE_ADDR'] ?? 'unknown'; }
+
+function storage_dir(): string {
+    $dir = sys_get_temp_dir() . '/frameitla_rl';
+    if (!is_dir($dir)) { @mkdir($dir, 0700, true); }
+    return $dir;
+}
+
+function ip_flagged(string $ip): bool {
+    $f = storage_dir() . '/flag_' . hash('sha256', $ip) . '.txt';
+    if (!is_file($f)) { return false; }
+    $ts = (int) @file_get_contents($f);
+    if ($ts && (time() - $ts) < FLAG_TTL) { return true; }
+    @unlink($f);
+    return false;
+}
+
+function flag_ip(string $ip): void {
+    $f = storage_dir() . '/flag_' . hash('sha256', $ip) . '.txt';
+    @file_put_contents($f, (string) time());
+}
+
+function bump_honeypot(string $ip): int {
+    $f = storage_dir() . '/hp_' . hash('sha256', $ip) . '.txt';
+    $count = 0;
+    $fp = @fopen($f, 'c+');
+    if (!$fp) { return 0; }
+    try {
+        flock($fp, LOCK_EX);
+        $count = (int) (stream_get_contents($fp) ?: '0');
+        $count++;
+        ftruncate($fp, 0); rewind($fp);
+        fwrite($fp, (string) $count);
+        fflush($fp);
+        flock($fp, LOCK_UN);
+    } finally {
+        fclose($fp);
+    }
+    return $count;
+}
+
+/** Sign "a|b|expiry" with HMAC so the answer can't be forged. */
+function captcha_issue(): array {
+    $a = random_int(2, 9);
+    $b = random_int(2, 9);
+    $exp = time() + CAPTCHA_TTL;
+    $payload = "$a|$b|$exp";
+    $sig = hash_hmac('sha256', $payload, CAPTCHA_SECRET);
+    return [
+        'question' => "What is $a + $b?",
+        'token'    => base64_encode($payload) . '.' . $sig,
+    ];
+}
+
+function captcha_verify(string $token, string $answer): bool {
+    $parts = explode('.', $token, 2);
+    if (count($parts) !== 2) { return false; }
+    $payload = base64_decode($parts[0], true);
+    if ($payload === false) { return false; }
+    $expected = hash_hmac('sha256', $payload, CAPTCHA_SECRET);
+    if (!hash_equals($expected, $parts[1])) { return false; }
+    [$a, $b, $exp] = array_pad(explode('|', $payload, 3), 3, '0');
+    if ((int) $exp < time()) { return false; }
+    return (int) $answer === ((int) $a + (int) $b);
+}
+
+// --- GET: issue a CAPTCHA challenge (only if this IP is flagged) ---
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+    $action = $_GET['action'] ?? '';
+    if ($action === 'captcha') {
+        if (!ip_flagged(client_ip())) {
+            respond(200, ['required' => false]);
+        }
+        respond(200, ['required' => true] + captcha_issue());
+    }
+    respond(405, ['ok' => false, 'error' => 'Method not allowed']);
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'Method not allowed']);
 }
