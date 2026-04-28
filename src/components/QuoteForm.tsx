@@ -16,6 +16,18 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
   const [submitting, setSubmitting] = useState(false);
   const [captcha, setCaptcha] = useState<Captcha | null>(null);
   const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [eventType, setEventType] = useState("");
+  const [otherEventType, setOtherEventType] = useState("");
+
+  const eventTypes = [
+    "Wedding",
+    "Corporate",
+    "Birthday",
+    "Anniversary",
+    "Quinceañera",
+    "Holiday Party",
+    "Other",
+  ];
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -33,7 +45,7 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       name: fd.get("name"),
       phone: fd.get("phone"),
       email: fd.get("email"),
-      eventType: fd.get("eventType") ?? "",
+      eventType: eventType === "Other" ? otherEventType.trim() : eventType,
       notes: fd.get("notes") ?? "",
     });
     if (!parsed.success) {
@@ -81,6 +93,8 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       form.reset();
       setCaptcha(null);
       setCaptchaAnswer("");
+      setEventType("");
+      setOtherEventType("");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send. Please try again.");
     } finally {
@@ -112,7 +126,25 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         <Input name="name" placeholder="Full Name" required />
         <Input name="phone" placeholder="Phone Number" type="tel" required />
         <Input name="email" placeholder="Email Address" type="email" required />
-        <Input name="eventType" placeholder="Event Type (Wedding, Corporate, etc.)" />
+        <select
+          name="eventType"
+          value={eventType}
+          onChange={(e) => setEventType(e.target.value)}
+          className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+        >
+          <option value="" disabled>Event Type</option>
+          {eventTypes.map((t) => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
+        {eventType === "Other" && (
+          <Input
+            name="eventTypeOther"
+            placeholder="Tell us about your event type"
+            value={otherEventType}
+            onChange={(e) => setOtherEventType(e.target.value)}
+          />
+        )}
         <textarea
           name="notes"
           rows={4}
