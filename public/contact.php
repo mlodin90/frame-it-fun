@@ -39,6 +39,55 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     respond(405, ['ok' => false, 'error' => 'Method not allowed']);
 }
 
+// --- Basic per-IP rate limiting (file-based, suitable for shared hosting) ---
+// Limits: 5 submissions per IP per hour, 20 per IP per day.
+(function (): void {
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    // Bucket dir outside web root if possible; fall back to system temp.
+    $dir = sys_get_temp_dir() . '/frameitla_rl';
+    if (!is_dir($dir)) { @mkdir($dir, 0700, true); }
+    $file = $dir . '/' . hash('sha256', $ip) . '.json';
+
+    $now    = time();
+    $hour   = 3600;
+    $day    = 86400;
+    $maxHr  = 5;
+    $maxDay = 20;
+
+    $fp = @fopen($file, 'c+');
+    if (!$fp) { return; } // fail-open if filesystem unavailable
+
+    try {
+        flock($fp, LOCK_EX);
+        $raw = stream_get_contents($fp) ?: '';
+        $log = json_decode($raw, true);
+        if (!is_array($log)) { $log = []; }
+
+        // Drop entries older than a day
+        $log = array_values(array_filter($log, fn($t) => is_int($t) && ($now - $t) < $day));
+
+        $inHour = count(array_filter($log, fn($t) => ($now - $t) < $hour));
+        $inDay  = count($log);
+
+        if ($inHour >= $maxHr || $inDay >= $maxDay) {
+            flock($fp, LOCK_UN);
+            fclose($fp);
+            header('Retry-After: 3600');
+            respond(429, ['ok' => false, 'error' => 'Too many requests. Please try again later.']);
+        }
+
+        $log[] = $now;
+        ftruncate($fp, 0);
+        rewind($fp);
+        fwrite($fp, json_encode($log));
+        fflush($fp);
+        flock($fp, LOCK_UN);
+    } finally {
+        if (is_resource($fp)) { fclose($fp); }
+    }
+})();
+
+
 // --- Parse JSON or form-encoded body ---
 $raw  = file_get_contents('php://input') ?: '';
 $data = json_decode($raw, true);
