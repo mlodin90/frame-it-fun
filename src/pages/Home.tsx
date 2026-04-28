@@ -114,7 +114,7 @@ export default function HomePage() {
               500+ Events
             </div>
           </div>
-          <div>
+          <div className="text-center lg:text-left">
             <div className="text-xs uppercase tracking-[0.3em] text-primary mb-3">
               Why Frame It LA
             </div>
