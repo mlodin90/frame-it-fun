@@ -10,8 +10,12 @@ const schema = z.object({
   notes: z.string().max(1000).optional(),
 });
 
+type Captcha = { question: string; token: string };
+
 export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
   const [submitting, setSubmitting] = useState(false);
+  const [captcha, setCaptcha] = useState<Captcha | null>(null);
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -37,19 +41,46 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       return;
     }
 
+    if (captcha && !captchaAnswer.trim()) {
+      toast.error("Please answer the verification question.");
+      return;
+    }
+
     setSubmitting(true);
     try {
+      const body: Record<string, unknown> = { ...parsed.data, company: "" };
+      if (captcha) {
+        body.captchaToken = captcha.token;
+        body.captchaAnswer = captchaAnswer.trim();
+      }
+
       const res = await fetch("/contact.php", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ ...parsed.data, company: "" }),
+        body: JSON.stringify(body),
       });
-      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      const json = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        captchaRequired?: boolean;
+        captcha?: Captcha;
+      };
+
+      if (json.captchaRequired && json.captcha) {
+        setCaptcha(json.captcha);
+        setCaptchaAnswer("");
+        toast.error(json.error || "Please solve the verification question.");
+        return;
+      }
+
       if (!res.ok || !json.ok) {
         throw new Error(json.error || "Something went wrong. Please try again.");
       }
+
       toast.success("Thanks! We'll be in touch within 24 hours.");
       form.reset();
+      setCaptcha(null);
+      setCaptchaAnswer("");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send. Please try again.");
     } finally {
@@ -89,6 +120,27 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
           maxLength={1000}
           className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
         />
+
+        {captcha && (
+          <div className="rounded-lg border border-primary/40 bg-secondary/40 p-4">
+            <label className="block text-xs uppercase tracking-[0.2em] text-primary mb-2">
+              Quick verification
+            </label>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium">{captcha.question}</span>
+              <Input
+                name="captchaAnswer"
+                value={captchaAnswer}
+                onChange={(e) => setCaptchaAnswer(e.target.value)}
+                placeholder="Answer"
+                inputMode="numeric"
+                autoComplete="off"
+                required
+              />
+            </div>
+          </div>
+        )}
+
         <button
           type="submit"
           disabled={submitting}
