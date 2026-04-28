@@ -93,6 +93,8 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       form.reset();
       setCaptcha(null);
       setCaptchaAnswer("");
+      setEventType("");
+      setOtherEventType("");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send. Please try again.");
     } finally {
