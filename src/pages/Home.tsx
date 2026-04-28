@@ -41,7 +41,7 @@ export default function HomePage() {
         <div className="relative max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-12 items-center w-full">
           <div>
             <div className="text-xs uppercase tracking-[0.3em] text-primary mb-4">
-              Los Angeles · Premium Photo Booths
+              Ventura · Los Angeles · Orange County — Premium Photo Booths
             </div>
             <h1 className="font-display text-5xl md:text-7xl leading-[1.05]">
               Capture Your <span className="text-gradient-gold italic">Moments</span>
