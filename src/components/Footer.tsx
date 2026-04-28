@@ -28,8 +28,11 @@ export function Footer() {
         </div>
         <div>
           <h4 className="text-sm uppercase tracking-[0.2em] text-primary mb-4">Contact</h4>
-          <a href="mailto:info@frameitla.com" className="text-muted-foreground hover:text-primary transition text-sm">
+          <a href="mailto:info@frameitla.com" className="block text-muted-foreground hover:text-primary transition text-sm">
             info@frameitla.com
+          </a>
+          <a href="tel:+19498871043" className="block mt-2 text-muted-foreground hover:text-primary transition text-sm">
+            (949) 887-1043
           </a>
           <div className="mt-4">
             <Link to="/contact" className="inline-flex bg-gradient-gold text-primary-foreground px-5 py-2 rounded-full text-sm font-semibold">
