@@ -16,6 +16,18 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
   const [submitting, setSubmitting] = useState(false);
   const [captcha, setCaptcha] = useState<Captcha | null>(null);
   const [captchaAnswer, setCaptchaAnswer] = useState("");
+  const [eventType, setEventType] = useState("");
+  const [otherEventType, setOtherEventType] = useState("");
+
+  const eventTypes = [
+    "Wedding",
+    "Corporate",
+    "Birthday",
+    "Anniversary",
+    "Quinceañera",
+    "Holiday Party",
+    "Other",
+  ];
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
