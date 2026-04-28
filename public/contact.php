@@ -13,6 +13,10 @@ const TO_EMAIL   = 'info@frameitla.com';
 // FROM_EMAIL must be an address on YOUR domain for Hostinger to deliver reliably.
 const FROM_EMAIL = 'no-reply@frameitla.com';
 const SITE_NAME  = 'Frame It LA';
+const CAPTCHA_SECRET     = 'CHANGE_ME_TO_A_LONG_RANDOM_STRING_abc123xyz789';
+const HONEYPOT_THRESHOLD = 2;     // honeypot hits before requiring CAPTCHA
+const CAPTCHA_TTL        = 600;   // CAPTCHA token valid for 10 minutes
+const FLAG_TTL           = 86400; // remember a flagged IP for 24h
 
 // --- CORS (allow your own site; adjust if you serve from a different host) ---
 header('Vary: Origin');
