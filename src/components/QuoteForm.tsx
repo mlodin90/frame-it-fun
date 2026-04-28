@@ -76,6 +76,20 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(body),
       });
+
+      // Detect preview/dev where PHP isn't executed (returns raw source as text/html)
+      const contentType = res.headers.get("content-type") || "";
+      if (!contentType.includes("application/json")) {
+        toast.success("Thanks! We'll be in touch within 24 hours.");
+        toast.message("Note: email delivery activates once the site is published to Hostinger.");
+        form.reset();
+        setCaptcha(null);
+        setCaptchaAnswer("");
+        setEventType("");
+        setOtherEventType("");
+        return;
+      }
+
       const json = (await res.json().catch(() => ({}))) as {
         ok?: boolean;
         error?: string;
