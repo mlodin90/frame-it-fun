@@ -15,7 +15,16 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+
+    // Honeypot — bots fill this hidden field; humans don't.
+    if ((fd.get("company") as string)?.length) {
+      toast.success("Thanks! We'll be in touch within 24 hours.");
+      form.reset();
+      return;
+    }
+
     const parsed = schema.safeParse({
       name: fd.get("name"),
       phone: fd.get("phone"),
@@ -27,11 +36,25 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       toast.error(parsed.error.issues[0]?.message ?? "Please review the form");
       return;
     }
+
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 700));
-    setSubmitting(false);
-    toast.success("Thanks! We'll be in touch within 24 hours.");
-    (e.target as HTMLFormElement).reset();
+    try {
+      const res = await fetch("/contact.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...parsed.data, company: "" }),
+      });
+      const json = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (!res.ok || !json.ok) {
+        throw new Error(json.error || "Something went wrong. Please try again.");
+      }
+      toast.success("Thanks! We'll be in touch within 24 hours.");
+      form.reset();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Could not send. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const wrap =
@@ -46,6 +69,15 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         Tell us about your event — we'll respond within 24 hours.
       </p>
       <div className="grid gap-4">
+        {/* Honeypot — hidden from real users */}
+        <input
+          type="text"
+          name="company"
+          tabIndex={-1}
+          autoComplete="off"
+          className="hidden"
+          aria-hidden="true"
+        />
         <Input name="name" placeholder="Full Name" required />
         <Input name="phone" placeholder="Phone Number" type="tel" required />
         <Input name="email" placeholder="Email Address" type="email" required />
