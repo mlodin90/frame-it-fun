@@ -41,6 +41,11 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       return;
     }
 
+    if (eventType === "Other" && !otherEventType.trim()) {
+      toast.error("Please specify your event type.");
+      return;
+    }
+
     const parsed = schema.safeParse({
       name: fd.get("name"),
       phone: fd.get("phone"),
@@ -143,6 +148,8 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
             placeholder="Tell us about your event type"
             value={otherEventType}
             onChange={(e) => setOtherEventType(e.target.value)}
+            maxLength={80}
+            required
           />
         )}
         <textarea
