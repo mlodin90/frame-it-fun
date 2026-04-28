@@ -177,10 +177,30 @@ if (!is_array($data)) {
     $data = $_POST;
 }
 
-// --- Honeypot (silently accept bots so they don't retry) ---
+// --- Honeypot: count hits, flag IP after threshold, silently 200 to bots ---
 if (!empty($data['company'])) {
+    $ip = client_ip();
+    if (bump_honeypot($ip) >= HONEYPOT_THRESHOLD) {
+        flag_ip($ip);
+    }
     respond(200, ['ok' => true]);
 }
+
+// --- CAPTCHA gate: required only if this IP has been flagged ---
+if (ip_flagged(client_ip())) {
+    $token  = (string)($data['captchaToken']  ?? '');
+    $answer = (string)($data['captchaAnswer'] ?? '');
+    if ($token === '' || $answer === '' || !captcha_verify($token, $answer)) {
+        $challenge = captcha_issue();
+        respond(403, [
+            'ok'              => false,
+            'error'           => 'Please solve the verification question.',
+            'captchaRequired' => true,
+            'captcha'         => $challenge,
+        ]);
+    }
+}
+
 
 // --- Validate ---
 $name      = trim((string)($data['name']      ?? ''));
