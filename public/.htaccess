@@ -1,0 +1,15 @@
+# Hostinger / shared-hosting SPA fallback
+# Sends all unknown URLs to index.html so React Router can handle them.
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+
+# Long cache for hashed assets
+<IfModule mod_headers.c>
+  <FilesMatch "\.(?:js|css|woff2?|png|jpg|jpeg|gif|svg|webp|avif)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>

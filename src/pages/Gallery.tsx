@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { SectionHeading } from "@/components/SectionHeading";
@@ -8,23 +8,7 @@ import g3 from "@/assets/gallery-3.jpg";
 import g4 from "@/assets/gallery-4.jpg";
 import g5 from "@/assets/gallery-5.jpg";
 import g6 from "@/assets/gallery-6.jpg";
-
-export const Route = createFileRoute("/gallery")({
-  head: () => ({
-    meta: [
-      { title: "Gallery — Frame It LA Photo Booth Events" },
-      {
-        name: "description",
-        content:
-          "Browse photos from Frame It LA's recent weddings, corporate events, birthdays and brand activations.",
-      },
-      { property: "og:title", content: "Gallery — Frame It LA" },
-      { property: "og:description", content: "Recent photo booth events from Frame It LA." },
-      { property: "og:image", content: g1 },
-    ],
-  }),
-  component: GalleryPage,
-});
+import { useDocumentMeta } from "@/hooks/use-document-meta";
 
 const photos = [
   { src: g1, alt: "Wedding couple posing in photo booth" },
@@ -35,7 +19,13 @@ const photos = [
   { src: g6, alt: "Holiday photo booth fun" },
 ];
 
-function GalleryPage() {
+export default function GalleryPage() {
+  useDocumentMeta({
+    title: "Gallery — Frame It LA Photo Booth Events",
+    description: "Browse photos from Frame It LA's recent weddings, corporate events, birthdays and brand activations.",
+    ogImage: g1,
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -51,18 +41,8 @@ function GalleryPage() {
       <section className="px-6 pb-24">
         <div className="max-w-7xl mx-auto columns-1 sm:columns-2 lg:columns-3 gap-5 [column-fill:_balance]">
           {photos.map((p, i) => (
-            <div
-              key={i}
-              className="mb-5 break-inside-avoid overflow-hidden rounded-2xl border border-border shadow-soft group"
-            >
-              <img
-                src={p.src}
-                alt={p.alt}
-                loading="lazy"
-                width={1024}
-                height={1024}
-                className="w-full h-auto group-hover:scale-105 transition duration-700"
-              />
+            <div key={i} className="mb-5 break-inside-avoid overflow-hidden rounded-2xl border border-border shadow-soft group">
+              <img src={p.src} alt={p.alt} loading="lazy" width={1024} height={1024} className="w-full h-auto group-hover:scale-105 transition duration-700" />
             </div>
           ))}
         </div>
