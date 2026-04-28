@@ -41,6 +41,11 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       return;
     }
 
+    if (eventType === "Other" && !otherEventType.trim()) {
+      toast.error("Please specify your event type.");
+      return;
+    }
+
     const parsed = schema.safeParse({
       name: fd.get("name"),
       phone: fd.get("phone"),
