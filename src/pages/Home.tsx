@@ -126,7 +126,7 @@ export default function HomePage() {
               designer backdrops, instant prints, and a friendly attendant who keeps
               the energy high all night long.
             </p>
-            <ul className="mt-8 space-y-3 text-sm">
+            <ul className="mt-8 space-y-3 text-sm inline-block text-left lg:block">
               {[
                 "Open-air & enclosed booth options",
                 "Custom-branded prints & overlays",
