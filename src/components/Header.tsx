@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
@@ -11,6 +11,9 @@ const links = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
+
+  const isActive = (to: string) => (to === "/" ? pathname === "/" : pathname.startsWith(to));
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/70 border-b border-border">
@@ -27,9 +30,9 @@ export function Header() {
             <li key={l.to}>
               <Link
                 to={l.to}
-                className="text-sm uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors"
-                activeProps={{ className: "text-primary" }}
-                activeOptions={{ exact: l.to === "/" }}
+                className={`text-sm uppercase tracking-[0.2em] transition-colors ${
+                  isActive(l.to) ? "text-primary" : "text-muted-foreground hover:text-primary"
+                }`}
               >
                 {l.label}
               </Link>
@@ -44,11 +47,7 @@ export function Header() {
           Get a Quote
         </Link>
 
-        <button
-          className="md:hidden text-primary"
-          onClick={() => setOpen(!open)}
-          aria-label="Menu"
-        >
+        <button className="md:hidden text-primary" onClick={() => setOpen(!open)} aria-label="Menu">
           {open ? <X /> : <Menu />}
         </button>
       </nav>
@@ -61,8 +60,9 @@ export function Header() {
                 <Link
                   to={l.to}
                   onClick={() => setOpen(false)}
-                  className="text-base uppercase tracking-[0.2em] text-muted-foreground"
-                  activeProps={{ className: "text-primary" }}
+                  className={`text-base uppercase tracking-[0.2em] ${
+                    isActive(l.to) ? "text-primary" : "text-muted-foreground"
+                  }`}
                 >
                   {l.label}
                 </Link>

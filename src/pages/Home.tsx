@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { QuoteForm } from "@/components/QuoteForm";
@@ -6,22 +6,7 @@ import { SectionHeading } from "@/components/SectionHeading";
 import { Camera, Sparkles, Heart, Gift, Briefcase, PartyPopper, Star } from "lucide-react";
 import heroImg from "@/assets/hero.jpg";
 import boothImg from "@/assets/booth.jpg";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Frame It LA — Luxury Photo Booth Rentals in Los Angeles" },
-      {
-        name: "description",
-        content:
-          "Capture every moment with Frame It LA's premium photo booths. Weddings, corporate events, birthdays & more. Book today for 20% off.",
-      },
-      { property: "og:image", content: heroImg },
-      { name: "twitter:image", content: heroImg },
-    ],
-  }),
-  component: HomePage,
-});
+import { useDocumentMeta } from "@/hooks/use-document-meta";
 
 const occasions = [
   { icon: Heart, label: "Weddings" },
@@ -32,12 +17,18 @@ const occasions = [
   { icon: Camera, label: "Product Launches" },
 ];
 
-function HomePage() {
+export default function HomePage() {
+  useDocumentMeta({
+    title: "Frame It LA — Luxury Photo Booth Rentals in Los Angeles",
+    description:
+      "Capture every moment with Frame It LA's premium photo booths. Weddings, corporate events, birthdays & more. Book today for 20% off.",
+    ogImage: heroImg,
+  });
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      {/* HERO */}
       <section className="relative min-h-[92vh] flex items-center">
         <img
           src={heroImg}
@@ -88,7 +79,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* OCCASIONS */}
       <section className="py-24 px-6">
         <SectionHeading
           eyebrow="Every Occasion"
@@ -109,7 +99,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* ABOUT/BOOTH */}
       <section className="py-24 px-6 bg-card/30">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
           <div className="relative">
@@ -155,7 +144,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* TESTIMONIAL */}
       <section className="py-24 px-6">
         <div className="max-w-3xl mx-auto text-center">
           <div className="flex justify-center gap-1 text-primary mb-6">
@@ -173,7 +161,6 @@ function HomePage() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto bg-gradient-gold rounded-3xl p-12 md:p-16 text-center text-primary-foreground shadow-gold">
           <h2 className="font-display text-4xl md:text-5xl">Ready to make it unforgettable?</h2>
