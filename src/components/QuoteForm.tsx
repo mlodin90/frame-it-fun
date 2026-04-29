@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
   phone: z.string().trim().min(7, "Enter a valid phone").max(30),
   email: z.string().trim().email("Invalid email").max(255),
   eventType: z.string().max(80).optional(),
+  eventDate: z.string().max(40).optional(),
+  startTime: z.string().max(10).optional(),
+  endTime: z.string().max(10).optional(),
   notes: z.string().max(1000).optional(),
 });
 
@@ -18,6 +27,21 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
   const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [eventType, setEventType] = useState("");
   const [otherEventType, setOtherEventType] = useState("");
+  const [eventDate, setEventDate] = useState<Date | undefined>(undefined);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
+  const timeOptions = (() => {
+    const out: string[] = [];
+    for (let h = 0; h < 24; h++) {
+      for (const m of [0, 30]) {
+        const hr12 = ((h + 11) % 12) + 1;
+        const ampm = h < 12 ? "AM" : "PM";
+        out.push(`${hr12}:${m.toString().padStart(2, "0")} ${ampm}`);
+      }
+    }
+    return out;
+  })();
 
   const eventTypes = [
     "Wedding",
@@ -51,6 +75,9 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       phone: fd.get("phone"),
       email: fd.get("email"),
       eventType: eventType === "Other" ? otherEventType.trim() : eventType,
+      eventDate: eventDate ? format(eventDate, "yyyy-MM-dd") : "",
+      startTime,
+      endTime,
       notes: fd.get("notes") ?? "",
     });
     if (!parsed.success) {
@@ -87,6 +114,9 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         setCaptchaAnswer("");
         setEventType("");
         setOtherEventType("");
+        setEventDate(undefined);
+        setStartTime("");
+        setEndTime("");
         return;
       }
 
@@ -114,6 +144,9 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       setCaptchaAnswer("");
       setEventType("");
       setOtherEventType("");
+      setEventDate(undefined);
+      setStartTime("");
+      setEndTime("");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send. Please try again.");
     } finally {
@@ -166,10 +199,59 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
             required
           />
         )}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal bg-secondary/40 border-border hover:bg-secondary/60",
+                !eventDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {eventDate ? format(eventDate, "PPP") : <span>Event date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 z-50 bg-popover" align="start">
+            <Calendar
+              mode="single"
+              selected={eventDate}
+              onSelect={setEventDate}
+              disabled={(d) => d < new Date(new Date().setHours(0, 0, 0, 0))}
+              initialFocus
+              className={cn("p-3 pointer-events-auto")}
+            />
+          </PopoverContent>
+        </Popover>
+        <div className="grid grid-cols-2 gap-4">
+          <select
+            name="startTime"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+          >
+            <option value="" disabled>Start time</option>
+            {timeOptions.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+          <select
+            name="endTime"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+          >
+            <option value="" disabled>End time</option>
+            {timeOptions.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
         <textarea
           name="notes"
           rows={4}
-          placeholder="Event details: location, date, hours, prints..."
+          placeholder="Event details: location, hours, prints..."
           maxLength={1000}
           className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
         />
