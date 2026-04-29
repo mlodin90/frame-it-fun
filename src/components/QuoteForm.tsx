@@ -144,6 +144,9 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       setCaptchaAnswer("");
       setEventType("");
       setOtherEventType("");
+      setEventDate(undefined);
+      setStartTime("");
+      setEndTime("");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not send. Please try again.");
     } finally {
