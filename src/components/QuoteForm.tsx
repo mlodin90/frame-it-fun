@@ -75,6 +75,9 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       phone: fd.get("phone"),
       email: fd.get("email"),
       eventType: eventType === "Other" ? otherEventType.trim() : eventType,
+      eventDate: eventDate ? format(eventDate, "yyyy-MM-dd") : "",
+      startTime,
+      endTime,
       notes: fd.get("notes") ?? "",
     });
     if (!parsed.success) {
