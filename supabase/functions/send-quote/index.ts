@@ -7,9 +7,10 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const TO_EMAIL = "info@frameitla.com";
-// NOTE: Switch this to "Frame It LA <quotes@notify.frameitla.com>" once
-// frameitla.com (or notify.frameitla.com) is verified at https://resend.com/domains
+// Until frameitla.com is verified at https://resend.com/domains, Resend's free
+// tier only allows sending to your Resend account email. Once verified, change
+// TO_EMAIL back to "info@frameitla.com" and FROM_EMAIL to a frameitla.com address.
+const TO_EMAIL = "sal@onpointpatrol.com";
 const FROM_EMAIL = "Frame It LA Quotes <onboarding@resend.dev>";
 
 interface QuotePayload {
