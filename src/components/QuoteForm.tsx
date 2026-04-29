@@ -254,7 +254,7 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         <textarea
           name="notes"
           rows={4}
-          placeholder="Event details: location, hours, prints..."
+          placeholder="Additional details and notes"
           maxLength={1000}
           className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
         />
