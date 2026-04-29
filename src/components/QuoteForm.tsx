@@ -12,6 +12,7 @@ const schema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
   phone: z.string().trim().min(7, "Enter a valid phone").max(30),
   email: z.string().trim().email("Invalid email").max(255),
+  location: z.string().max(200).optional(),
   eventType: z.string().max(80).optional(),
   eventDate: z.string().max(40).optional(),
   startTime: z.string().max(10).optional(),
@@ -78,6 +79,7 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
       eventDate: eventDate ? format(eventDate, "yyyy-MM-dd") : "",
       startTime,
       endTime,
+      location: fd.get("location") ?? "",
       notes: fd.get("notes") ?? "",
     });
     if (!parsed.success) {
@@ -178,6 +180,7 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         <Input name="name" placeholder="Full Name" required />
         <Input name="phone" placeholder="Phone Number" type="tel" required />
         <Input name="email" placeholder="Email Address" type="email" required />
+        <Input name="location" placeholder="Event Location (city or venue)" maxLength={200} />
         <select
           name="eventType"
           value={eventType}
