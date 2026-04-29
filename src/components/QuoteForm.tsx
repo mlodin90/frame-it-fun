@@ -177,7 +177,7 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
           className="hidden"
           aria-hidden="true"
         />
-        <Input name="name" placeholder="Full Name" required />
+        <Input name="name" placeholder="Name" required />
         <Input name="phone" placeholder="Phone Number" type="tel" required />
         <Input name="email" placeholder="Email Address" type="email" required />
         <Input name="location" placeholder="Event Location (Address)" maxLength={200} />
