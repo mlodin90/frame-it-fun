@@ -17,7 +17,7 @@ const services = [
 ];
 
 const packages = [
-  { name: "Essentials", price: "$695", duration: "2 hours", features: ["Open-air booth", "Premium prop kit", "Unlimited prints", "On-site attendant", "Digital gallery"] },
+  { name: "Essentials", price: "$695", duration: "4 hours", features: ["Open-air booth", "Premium prop kit", "Unlimited digital copies", "On-site attendant", "Digital gallery"] },
   { name: "Signature", price: "$1,095", duration: "4 hours", featured: true, features: ["Everything in Essentials", "Custom-branded prints", "Designer backdrop selection", "Instant social sharing", "USB of all photos"] },
   { name: "Luxe", price: "$1,895", duration: "6 hours", features: ["Everything in Signature", "GIF & boomerang capture", "Premium sequin backdrop", "Scrapbook with guest signatures", "Two attendants"] },
 ];
