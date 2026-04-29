@@ -17,8 +17,16 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-background/70 border-b border-border">
-      <div className="bg-gradient-gold text-primary-foreground text-center text-xs sm:text-sm py-2 font-medium tracking-wide">
-        BOOK TODAY FOR 20% OFF YOUR NEXT EVENT!
+      <div className="bg-gradient-gold text-primary-foreground text-xs sm:text-sm py-2 font-medium tracking-wide overflow-hidden">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {Array.from({ length: 2 }).map((_, group) => (
+            <div key={group} className="flex shrink-0">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <span key={i} className="mx-8 shrink-0">BOOK TODAY FOR 20% OFF YOUR NEXT EVENT!</span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
       <nav className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         <Link to="/" className="font-display text-2xl tracking-wide">
