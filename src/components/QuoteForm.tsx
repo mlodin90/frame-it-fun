@@ -27,6 +27,21 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
   const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [eventType, setEventType] = useState("");
   const [otherEventType, setOtherEventType] = useState("");
+  const [eventDate, setEventDate] = useState<Date | undefined>(undefined);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+
+  const timeOptions = (() => {
+    const out: string[] = [];
+    for (let h = 0; h < 24; h++) {
+      for (const m of [0, 30]) {
+        const hr12 = ((h + 11) % 12) + 1;
+        const ampm = h < 12 ? "AM" : "PM";
+        out.push(`${hr12}:${m.toString().padStart(2, "0")} ${ampm}`);
+      }
+    }
+    return out;
+  })();
 
   const eventTypes = [
     "Wedding",
