@@ -114,6 +114,9 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         setCaptchaAnswer("");
         setEventType("");
         setOtherEventType("");
+        setEventDate(undefined);
+        setStartTime("");
+        setEndTime("");
         return;
       }
 
