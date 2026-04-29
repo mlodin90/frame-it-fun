@@ -1,12 +1,21 @@
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
   phone: z.string().trim().min(7, "Enter a valid phone").max(30),
   email: z.string().trim().email("Invalid email").max(255),
   eventType: z.string().max(80).optional(),
+  eventDate: z.string().max(40).optional(),
+  startTime: z.string().max(10).optional(),
+  endTime: z.string().max(10).optional(),
   notes: z.string().max(1000).optional(),
 });
 
