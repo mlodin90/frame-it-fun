@@ -35,7 +35,7 @@ export default function ServicesPage() {
       <section className="pt-20 pb-16 px-6">
         <SectionHeading
           eyebrow="Our Services"
-          title={<>Photo booth experiences for <span className="text-gradient-gold italic">every</span> event</>}
+          title={<>Photo booth experiences for <span className="text-primary italic">every</span> event</>}
           subtitle="Every booking includes premium equipment, an experienced attendant, and on-brand design."
         />
       </section>
