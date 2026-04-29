@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -100,44 +101,15 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         body.captchaAnswer = captchaAnswer.trim();
       }
 
-      const res = await fetch("/contact.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(body),
+      const { data, error } = await supabase.functions.invoke("send-quote", {
+        body,
       });
 
-      // Detect preview/dev where PHP isn't executed (returns raw source as text/html)
-      const contentType = res.headers.get("content-type") || "";
-      if (!contentType.includes("application/json")) {
-        toast.success("Thanks! We'll be in touch within 24 hours.");
-        toast.message("Note: email delivery activates once the site is published to Hostinger.");
-        form.reset();
-        setCaptcha(null);
-        setCaptchaAnswer("");
-        setEventType("");
-        setOtherEventType("");
-        setEventDate(undefined);
-        setStartTime("");
-        setEndTime("");
-        return;
+      if (error) {
+        throw new Error(error.message || "Could not send. Please try again.");
       }
-
-      const json = (await res.json().catch(() => ({}))) as {
-        ok?: boolean;
-        error?: string;
-        captchaRequired?: boolean;
-        captcha?: Captcha;
-      };
-
-      if (json.captchaRequired && json.captcha) {
-        setCaptcha(json.captcha);
-        setCaptchaAnswer("");
-        toast.error(json.error || "Please solve the verification question.");
-        return;
-      }
-
-      if (!res.ok || !json.ok) {
-        throw new Error(json.error || "Something went wrong. Please try again.");
+      if (!data?.ok) {
+        throw new Error((data as { error?: string })?.error || "Could not send. Please try again.");
       }
 
       toast.success("Thanks! We'll be in touch within 24 hours.");
