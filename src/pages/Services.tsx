@@ -17,7 +17,7 @@ const services = [
 ];
 
 const packages = [
-  { name: "Essentials", price: "$695", duration: "2 hours", features: ["Open-air booth", "Premium prop kit", "Unlimited prints", "On-site attendant", "Digital gallery"] },
+  { name: "Essentials", price: "$695", duration: "4 hours", features: ["Open-air booth", "Premium prop kit", "Unlimited digital copies", "On-site attendant", "Digital gallery"] },
   { name: "Signature", price: "$1,095", duration: "4 hours", featured: true, features: ["Everything in Essentials", "Custom-branded prints", "Designer backdrop selection", "Instant social sharing", "USB of all photos"] },
   { name: "Luxe", price: "$1,895", duration: "6 hours", features: ["Everything in Signature", "GIF & boomerang capture", "Premium sequin backdrop", "Scrapbook with guest signatures", "Two attendants"] },
 ];
@@ -35,7 +35,7 @@ export default function ServicesPage() {
       <section className="pt-20 pb-16 px-6">
         <SectionHeading
           eyebrow="Our Services"
-          title={<>Photo booth experiences for <span className="text-gradient-gold italic">every</span> event</>}
+          title={<>Photo booth experiences for <span className="text-primary italic">every</span> event</>}
           subtitle="Every booking includes premium equipment, an experienced attendant, and on-brand design."
         />
       </section>
