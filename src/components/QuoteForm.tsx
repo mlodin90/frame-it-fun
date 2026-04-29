@@ -49,7 +49,7 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
     "Corporate",
     "Birthday",
     "Anniversary",
-    "Quinceañera",
+    "Graduation",
     "Holiday Party",
     "Other",
   ];
