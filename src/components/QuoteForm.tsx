@@ -199,10 +199,59 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
             required
           />
         )}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal bg-secondary/40 border-border hover:bg-secondary/60",
+                !eventDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {eventDate ? format(eventDate, "PPP") : <span>Event date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 z-50 bg-popover" align="start">
+            <Calendar
+              mode="single"
+              selected={eventDate}
+              onSelect={setEventDate}
+              disabled={(d) => d < new Date(new Date().setHours(0, 0, 0, 0))}
+              initialFocus
+              className={cn("p-3 pointer-events-auto")}
+            />
+          </PopoverContent>
+        </Popover>
+        <div className="grid grid-cols-2 gap-4">
+          <select
+            name="startTime"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+          >
+            <option value="" disabled>Start time</option>
+            {timeOptions.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+          <select
+            name="endTime"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
+          >
+            <option value="" disabled>End time</option>
+            {timeOptions.map((t) => (
+              <option key={t} value={t}>{t}</option>
+            ))}
+          </select>
+        </div>
         <textarea
           name="notes"
           rows={4}
-          placeholder="Event details: location, date, hours, prints..."
+          placeholder="Event details: location, hours, prints..."
           maxLength={1000}
           className="w-full bg-secondary/40 border border-border rounded-lg px-4 py-3 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition"
         />
