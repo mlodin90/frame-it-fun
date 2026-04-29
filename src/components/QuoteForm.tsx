@@ -180,7 +180,7 @@ export function QuoteForm({ variant = "dark" }: { variant?: "dark" | "card" }) {
         <Input name="name" placeholder="Full Name" required />
         <Input name="phone" placeholder="Phone Number" type="tel" required />
         <Input name="email" placeholder="Email Address" type="email" required />
-        <Input name="location" placeholder="Event Location (city or venue)" maxLength={200} />
+        <Input name="location" placeholder="Event Location (Address)" maxLength={200} />
         <select
           name="eventType"
           value={eventType}
