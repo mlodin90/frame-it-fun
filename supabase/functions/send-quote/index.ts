@@ -8,7 +8,9 @@ const corsHeaders = {
 };
 
 const TO_EMAIL = "info@frameitla.com";
-const FROM_EMAIL = "Frame It LA Quotes <quotes@notify.frameitla.com>";
+// NOTE: Switch this to "Frame It LA <quotes@notify.frameitla.com>" once
+// frameitla.com (or notify.frameitla.com) is verified at https://resend.com/domains
+const FROM_EMAIL = "Frame It LA Quotes <onboarding@resend.dev>";
 
 interface QuotePayload {
   name?: string;
